@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.SAccountRecordMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.SAccountRecord">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="recordBody" jdbcType="VARCHAR" property="recordbody" />
+    <result column="recordPrice" jdbcType="INTEGER" property="recordprice" />
+    <result column="recordNowPrice" jdbcType="INTEGER" property="recordnowprice" />
+    <result column="recordStatus" jdbcType="INTEGER" property="recordstatus" />
+    <result column="recordType" jdbcType="INTEGER" property="recordtype" />
+    <result column="recordMold" jdbcType="INTEGER" property="recordmold" />
+    <result column="recordToObject" jdbcType="VARCHAR" property="recordtoobject" />
+    <result column="recordToUserId" jdbcType="INTEGER" property="recordtouserid" />
+    <result column="recordToAccountId" jdbcType="INTEGER" property="recordtoaccountid" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectAccountRecordToUserId" resultType="java.util.Map">
+    select r.recordBody as recordbody,r.recordPrice as recordprice,r.recordNowPrice as recordnowprice,
+    r.recordStatus as recordstatus,r.recordType as recordtype,r.recordMold as recordmold,r.recordToObject as  recordtoobject,
+    r.recordToUserId as recordtouserid,r.recordToAccountId as recordtoaccountid,r.createDate as createdate,
+    case when r.recordMold=4 then (select u.realName from s_user u where u.id=r.recordToObject) else null end as userRealName,
+    case when r.recordMold=4 then (select u.userNickName from s_user u where u.id=r.recordToObject) else null end as userNickName,
+    case when r.recordMold=4 then (select u.userAccount from s_user u where u.id=r.recordToObject) else null end as userAccount
+    from s_account_record r where r.recordToUserId=#{userId,jdbcType=INTEGER}
+    <if test="recordtype!=null">
+      and r.recordType=#{recordtype,jdbcType=INTEGER}
+    </if>
+    <if test="recordmold!=null">
+      and r.recordMold=#{recordmold,jdbcType=INTEGER}
+    </if>
+    order by r.createDate desc
+  </select>
+  <select id="selectSystemUserIntegralRecord" resultType="java.util.Map">
+    select r.*,u.userAccount,u.realName from s_account_record r left join s_user u on u.id=r.recordToObject
+     where r.recordType=1 and r.recordMold=4 and r.recordStatus=0 and r.recordToUserId=#{userId,jdbcType=INTEGER}
+    <if test="startDate!=null">
+      and r.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and r.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectSystemUserIntegralNum" resultType="BigDecimal">
+    select ifnull(sum(r.recordPrice),0) from s_account_record r where r.recordType=1 and r.recordMold=4 and r.recordStatus=0 and r.recordToUserId=#{userId,jdbcType=INTEGER}
+    <if test="startDate!=null">
+      and r.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and r.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+</mapper>

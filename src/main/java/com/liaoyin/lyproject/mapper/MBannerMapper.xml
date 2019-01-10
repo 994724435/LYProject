@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MBannerMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MBanner">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="bannerOrder" jdbcType="INTEGER" property="bannerorder" />
+    <result column="bannerType" jdbcType="INTEGER" property="bannertype" />
+    <result column="bannerImg" jdbcType="VARCHAR" property="bannerimg" />
+    <result column="bannerObject" jdbcType="VARCHAR" property="bannerobject" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectBannerAllBannerType" resultMap="BaseResultMap">
+    select * from  m_banner where 1=1
+    <if test="bannerType!=null">
+      bannerType=#{bannerType,jdbcType=INTEGER}
+    </if>
+    order by  bannerOrder asc
+  </select>
+</mapper>

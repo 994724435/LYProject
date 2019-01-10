@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MMateMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MMate">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="planToonUserId" jdbcType="INTEGER" property="plantoonuserid" />
+    <result column="cashapplyUserId" jdbcType="INTEGER" property="cashapplyuserid" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="type" jdbcType="INTEGER" property="type"/>
+    <result column="proofFile" jdbcType="LONGVARCHAR" property="prooffile" />
+    <result column="makePriceDate" jdbcType="TIMESTAMP" property="makePriceDate"/>
+    <result column="confirmPriceDate" jdbcType="TIMESTAMP" property="confirmPriceDate"/>
+    <result column="planToonId" jdbcType="INTEGER" property="planToonId"/>
+    <result column="cashapplyId" jdbcType="INTEGER" property="cashapplyId"/>
+  </resultMap>
+  <select id="selectMateToUser" resultMap="BaseResultMap">
+    select * from m_mate where 1=1
+    <if test="planToonUserId!=null">
+      and planToonUserId=#{planToonUserId,jdbcType=INTEGER}
+    </if>
+    <if test="cashapplyUserId!=null">
+      and cashapplyUserId=#{cashapplyUserId,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+      and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="planToonId!=null">
+      and planToonId=#{planToonId,jdbcType=INTEGER}
+    </if>
+    <if test="cashapplyId">
+      and cashapplyId=#{cashapplyId,jdbcType=INTEGER}
+    </if>
+    <if test="type!=null">
+      and type=#{type,jdbcType=INTEGER}
+    </if>
+    order by createDate desc
+  </select>
+
+  <select id="selectMateToUserSumPrice" resultType="BigDecimal">
+    select ifnull(sum(price),0) from m_mate where 1=1
+    <if test="planToonUserId!=null">
+      and planToonUserId=#{planToonUserId,jdbcType=INTEGER}
+    </if>
+    <if test="cashapplyUserId!=null">
+      and cashapplyUserId=#{cashapplyUserId,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+      and status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="planToonId!=null">
+      and planToonId=#{planToonId,jdbcType=INTEGER}
+    </if>
+    <if test="cashapplyId">
+      and cashapplyId=#{cashapplyId,jdbcType=INTEGER}
+    </if>
+    <if test="type!=null">
+      and type=#{type,jdbcType=INTEGER}
+    </if>
+    order by createDate desc
+  </select>
+  <select id="selectMateRecordDetail" resultType="java.util.Map">
+    select m.price,m.proofFile,u.realName,u.userAccount,u2.realName as refereeName,u2.userAccount as refereeUserAccount,
+    a.alipayAccount,a.wxpayAccount,a.bankAccount,a.bankName
+    from m_mate m left join s_user u on m.cashapplyUserId=u.id left join s_account a on m.cashapplyUserId=a.userId
+    left join s_user u2 on u.refereeId=u2.id where m.id=#{mateId,jdbcType=INTEGER}
+  </select>
+  <select id="selectMateRecordToAll" resultType="java.util.Map">
+    select m.*,u1.realName as planToonRealName,u1.userAccount as plaToonUserAccount,
+    u2.realName as cashapplyRealName,u2.userAccount as cashapplyUserAccount from m_mate m
+    left join s_user u1 on m.planToonUserId=u1.id
+    left join s_user u2 on m.cashapplyUserId=u2.id where 1=1
+    <if test="key!=null">
+      and (u1.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or u1.userNickName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+      or u1.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or u2.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+      or u2.userNickName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or u2.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="startDate!=null">
+      and m.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and m.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status!=null">
+      and m.status=#{status,jdbcType=INTEGER}
+    </if>
+    <if test="mold!=null">
+      and m.mold=#{mold,jdbcType=INTEGER}
+    </if>
+    order by m.createDate desc
+  </select>
+  <select id="selectMateOut" resultMap="BaseResultMap">
+    SELECT m.* from m_mate m where m.planToonUserId=#{userId,jdbcType=INTEGER} and m.proofFile is not null
+  </select>
+  <select id="selectHomeZJS" resultType="BigDecimal">
+    select IFNULL((select sum(c.remainPrice) from m_cashapply_order c where c.status=0
+    <if test="startDate!=null">
+      and c.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and c.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>)-
+(select sum(p.remainPrice) from m_platoon_order p where p.status=0
+    <if test="startDate!=null">
+      and p.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and p.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>),0)
+  </select>
+  <select id="selectHomeCSZJS" resultType="java.util.Map">
+    select ifnull(sum(p.price),0) as price,ifnull(sum(p.matePrice),0) as matePrice,ifnull(sum(p.remainPrice),0) as remainPrice from m_cashapply_order p where p.status!=2
+    <if test="startDate!=null">
+      and p.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and p.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectHomeZCRS" resultType="BigDecimal">
+    select count(1) from s_user where 1=1
+    <if test="startDate!=null">
+      and createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+  </select>
+  <select id="selectHomeCCZJES" resultType="BigDecimal">
+    select sum(remainPrice) from m_cashapply_order where status=0
+  </select>
+  <select id="selectHomePDZJES" resultType="BigDecimal">
+    select sum(remainPrice) from m_platoon_order where status=0
+  </select>
+</mapper>

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MSmsCodeMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MSmsCode">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectCodeNewest" resultMap="BaseResultMap">
+      select * from m_smscode where phone=#{phone,jdbcType=VARCHAR} and type=#{type,jdbcType=VARCHAR} order by createDate desc limit 1
+  </select>
+</mapper>

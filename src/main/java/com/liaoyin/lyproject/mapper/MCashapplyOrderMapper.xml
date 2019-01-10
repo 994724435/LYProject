@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MCashapplyOrderMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MCashapplyOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="matePrice" jdbcType="INTEGER" property="mateprice" />
+    <result column="remainPrice" jdbcType="INTEGER" property="remainprice" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="mold" jdbcType="INTEGER" property="mold"/>
+  </resultMap>
+  <select id="selectCashapplyOrderNot" resultMap="BaseResultMap">
+    select * from m_cashapply_order where status=0 and remainPrice>0 and (mold is null or mold!=1) order by createDate asc
+  </select>
+  <select id="queryUserCashapplyOrderRecord" resultType="java.util.Map">
+    select o.price,o.matePrice,o.remainPrice,o.status,o.createDate,o.id from m_cashapply_order o
+     where o.userId=#{userId,jdbcType=INTEGER}
+    <if test="cashapplyStatus!=null">
+      and o.status=#{cashapplyStatus,jdbcType=INTEGER}
+    </if>
+    order by o.createDate desc
+  </select>
+  <select id="selectCashapplyOrderSystem" resultType="java.util.Map">
+    select c.*,u.userAccount,u.userNickName,u.realName from m_cashapply_order c left join s_user u on c.userId=u.id where 1=1
+    <if test="key!=null">
+      and (u.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or u.userNickName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+      or u.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="startDate!=null">
+      and c.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and c.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="mold!=null">
+      and c.status=#{mold,jdbcType=INTEGER}
+    </if>
+    order by c.createDate desc
+  </select>
+  <select id="selectCahsapplyOverPlanToonDate"  resultType="java.util.Map">
+    SELECT c.*,u.userAccount,u.userNickName,u.realName,p.createDate as planToonCreateDate from m_cashapply_order c
+    left join s_user u on c.userId=u.id LEFT JOIN (select p.userId,p.createDate from (select * from m_platoon_order ORDER BY createDate DESC)
+    p GROUP BY p.userId ORDER BY p.createDate DESC ) p on p.userId=c.userId where c.status=0
+    <if test="startDate!=null">
+      and c.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and c.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+     ORDER BY p.createDate asc
+  </select>
+  <update id="updateCashapplyMold">
+    update m_cashapply_order set mold=#{mold,jdbcType=INTEGER} where userid=#{userId,jdbcType=INTEGER}
+  </update>
+  <select id="selectCashapplyEndDate" resultMap="BaseResultMap">
+    select * from m_cashapply_order where userId=#{userId,jdbcType=INTEGER} order by createDate desc LIMIT 0,1
+  </select>
+  <update id="updateCashapplyMoldIsSwitch">
+    update m_cashapply_order set mold=#{mold,jdbcType=INTEGER}
+  </update>
+  <update id="updateCashapplyMoldIsSwitchToUserIds">
+    update m_cashapply_order set mold=#{mold,jdbcType=INTEGER} where userId in (${userIds})
+  </update>
+</mapper>

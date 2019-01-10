@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MRobMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MRob">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="matePrice" jdbcType="INTEGER" property="mateprice" />
+    <result column="remainPrice" jdbcType="INTEGER" property="remainprice" />
+    <result column="systemUserId" jdbcType="INTEGER" property="systemuserid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="batchNum" jdbcType="VARCHAR" property="batchnum" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectRobStatus" resultMap="BaseResultMap">
+    select * from m_rob r where r.status=#{status,jdbcType=INTEGER}
+  </select>
+  <select id="selectRobAllToMap" resultType="java.util.Map">
+    select r.*,u.realName
+    from m_rob r left join t_systemuser u on r.systemUserId=u.id order by r.createDate desc
+  </select>
+</mapper>

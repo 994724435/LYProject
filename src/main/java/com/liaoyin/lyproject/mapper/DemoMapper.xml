@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.DemoMapper">
+  <parameterMap id="Demo" type="com.liaoyin.lyproject.entity.Demo"/>
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.Demo">
+    <id column="id" jdbcType="VARCHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+  </resultMap>
+  <!--分页查询-->
+  <select id="selectDemoByPage" parameterMap="Demo">
+    select * from demo
+  </select>
+</mapper>

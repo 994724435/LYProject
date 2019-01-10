@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.TSystemUserLockVoteMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.TSystemUserLockVote">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="createUserId" jdbcType="INTEGER" property="createuserid" />
+    <result column="lockUserId" jdbcType="INTEGER" property="lockuserid" />
+    <result column="partakeUserIds" jdbcType="VARCHAR" property="partakeuserids" />
+    <result column="processedUserIds" jdbcType="VARCHAR" property="processeduserids" />
+    <result column="agreeUserIds" jdbcType="VARCHAR" property="agreeuserids" />
+    <result column="agreeNum" jdbcType="INTEGER" property="agreenum" />
+    <result column="notAgreeUserIds" jdbcType="VARCHAR" property="notagreeuserids" />
+    <result column="notAgreeNum" jdbcType="INTEGER" property="notagreenum" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="body" jdbcType="LONGVARCHAR" property="body" />
+  </resultMap>
+
+  <select id="selectUserLockVoteLockUserAndStatus" resultMap="BaseResultMap">
+    select * from t_systemuser_lock_vote l where l.lockUserId=#{lockUserId,jdbcType=INTEGER} and l.status=0
+  </select>
+  <select id="selectUserLockVoteLockStatus" resultMap="BaseResultMap">
+    select * from t_systemuser_lock_vote l where l.status=0
+  </select>
+  <select id="selectSystemUserLockVote" resultType="java.util.Map">
+    select v.*,u.realName,
+    case when (select v2.id from t_systemuser_lock_vote v2 where (v2.agreeUserIds like CONCAT('%',#{nowUserId,jdbcType=VARCHAR},'%') or
+      v2.notAgreeUserIds like CONCAT('%',#{nowUserId,jdbcType=VARCHAR},'%') and v2.id=v.id)) IS NOT NULL then 'true' WHEN v.status=1 THEN 'true'
+       else 'false' end as nowUserIsHandle from t_systemuser_lock_vote v left join t_systemuser u on v.createUserId=u.id
+    order by v.status asc
+  </select>
+</mapper>

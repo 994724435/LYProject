@@ -1,0 +1,5 @@
+spring:
+  profiles:
+    #  active: product
+       active: product
+    #  active: product

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MPlatoonOrderMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MPlatoonOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="matePrice" jdbcType="INTEGER" property="mateprice" />
+    <result column="remainPrice" jdbcType="INTEGER" property="remainprice" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectMplatoonOrderNot" resultMap="BaseResultMap">
+    select * from m_platoon_order  where status=0  and remainPrice>0 order by createDate asc
+  </select>
+  <select id="selectMplatoonOrderRecord" resultType="java.util.Map">
+    select p.price,p.matePrice,p.remainPrice,p.status,p.createDate,p.id from m_platoon_order p
+     LEFT JOIN m_mate m on p.id=m.planToonId
+     where p.userId=#{userId,jdbcType=INTEGER}
+     <if test="status!=null">
+       and m.status=#{status,jdbcType=INTEGER}
+     </if>
+     <if test="platoonStatus!=null">
+       and p.status=#{platoonStatus,jdbcType=INTEGER}
+     </if>
+    order by p.createDate desc
+  </select>
+  <select id="selectPlatoonOrderSystem" resultType="java.util.Map">
+    select p.*,u.userAccount,u.userNickName,u.realName from m_platoon_order p left join s_user u on p.userId=u.id where 1=1
+    <if test="key!=null">
+      and (u.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or u.userNickName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+       or u.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="startDate!=null">
+      and p.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and p.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="mold!=null">
+      and p.status=#{mold,jdbcType=INTEGER}
+    </if>
+    order by p.createDate desc
+  </select>
+  <select id="selectSumPlatoonPriceToStatus" resultType="java.util.Map">
+    select t.*,t.price-t.matePrice as remainPrice,t.matePrice as cashapplyPrice from (
+    SELECT
+    ifnull(sum(p.price), 0) AS price,
+    (select ifnull(sum(m.price), 0) from m_mate m where m.type=0
+    <if test="startDate!=null">
+      and m.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and m.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ) AS matePrice
+    FROM
+    m_platoon_order p
+    WHERE
+    p. STATUS != 2
+    <if test="startDate!=null">
+      and p.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and p.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    ) t
+  </select>
+  <select id="selectPlantUserNum" resultType="BigDecimal">
+    SELECT COUNT(DISTINCT(p.userId)) FROM m_platoon_order p
+  </select>
+  <select id="selectPlantUserLiveNum" resultType="BigDecimal">
+    select COUNT(1) FROM (SELECT DISTINCT(p.userId) as userId FROM m_platoon_order p) p LEFT JOIN s_user u on p.userId=u.id where u.arrangement=0
+  </select>
+  <select id="selectPlantUserSonNum" resultType="BigDecimal">
+    select COUNT(1) FROM (SELECT DISTINCT(p.userId) as userId FROM m_platoon_order p) p LEFT JOIN s_user u on p.userId=u.id where u.arrangement=1
+  </select>
+  <select id="selectUserEndDatePlantoonOrder" resultMap="BaseResultMap">
+    select * from m_platoon_order where userId=#{userId,jdbcType=INTEGER} and status=0 order by createDate desc LIMIT 0,1
+  </select>
+  <select id="selectUserPlantMax" resultType="BigDecimal">
+    select IFNULL(MAX(price),0) from m_platoon_order where userId=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectUserEndDatePlantoonOrders" resultMap="BaseResultMap">
+    select * from m_platoon_order where userId=#{userId,jdbcType=INTEGER} order by createDate desc LIMIT 0,1
+  </select>
+  <select id="selectUserPlantoonOrdersUserIds" resultMap="BaseResultMap">
+    select v1.* FROM (select t.* from(select * FROM m_cashapply_order c
+    ORDER BY c.createDate DESC) t GROUP BY t.userId DESC) v1
+    LEFT JOIN (select t.* from(select * FROM m_platoon_order p ORDER BY p.createDate DESC) t GROUP BY t.userId DESC) v2 on v1.userId=v2.userId
+    where v1.createDate > v2.createDate and v1.userId in (${userIds})
+  </select>
+</mapper>

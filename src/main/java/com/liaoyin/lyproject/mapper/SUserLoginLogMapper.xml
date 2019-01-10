@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.SUserLoginLogMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.SUserLoginLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userAccount" jdbcType="VARCHAR" property="useraccount" />
+    <result column="userPassword" jdbcType="VARCHAR" property="userpassword" />
+    <result column="realName" jdbcType="VARCHAR" property="realName"/>
+    <result column="requestIp" jdbcType="VARCHAR" property="requestip" />
+    <result column="requestThread" jdbcType="VARCHAR" property="requestthread" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectUserLoginLog" resultMap="BaseResultMap">
+    select * from  s_user_login_log o where 1=1
+    <if test="key!=null">
+      and (o.userAccount like CONCAT('%',#{key,jdbcType=VARCHAR},'%') or o.realName like
+       CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="startDate!=null">
+      and o.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and o.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    order by o.createDate desc
+  </select>
+</mapper>

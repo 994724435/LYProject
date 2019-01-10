@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MRobOrderMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MRobOrder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="price" jdbcType="INTEGER" property="price" />
+    <result column="matePrice" jdbcType="INTEGER" property="mateprice" />
+    <result column="remainPrice" jdbcType="INTEGER" property="remainprice" />
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="batchNum" jdbcType="VARCHAR" property="batchnum" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectRobOrderAllMap" resultType="java.util.Map">
+    select o.*,u.realName,u.userAccount from m_rob_order o left join s_user u on o.userId=u.id where 1=1
+    <if test="key!=null">
+      and (u.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or u.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="batchNum!=null">
+      and o.batchNum=#{batchNum,jdbcType=VARCHAR}
+    </if>
+    <if test="status!=null">
+      and o.status=#{status,jdbcType=INTEGER}
+    </if>
+     order by o.createDate desc
+  </select>
+  <select id="selectUserRobOrderRecord" resultType="java.util.Map">
+    select o.* from m_rob_order o where o.userId=#{userId,jdbcType=INTEGER}
+    <if test="status!=null">
+      and o.status=#{status,jdbcType=INTEGER}
+      <!--<if test="status==0">-->
+        <!--and o.status=0-->
+      <!--</if>-->
+      <!--<if test="status==1">-->
+        <!--and o.price &lt;(select sum(m.price) from m_mate m where m.planToonId=o.id and m.type=1 and m.status=2)-->
+      <!--</if>-->
+      <!--<if test="status==2">-->
+        <!--and o.price &gt;=(select sum(m.price) from m_mate m where m.planToonId=o.id and m.type=1 and m.status=2)-->
+      <!--</if>-->
+    </if>
+    order by o.createDate desc
+  </select>
+  <select id="selectUserRobOrderRecordSumPrice" resultType="BigDecimal">
+    select ifnull(sum(o.price),0) from m_rob_order o where o.userId=#{userId,jdbcType=INTEGER}
+    <if test="status!=null">
+      and o.status=#{status,jdbcType=INTEGER}
+      <!--<if test="status==0">-->
+        <!--and o.status=0-->
+      <!--</if>-->
+      <!--<if test="status==1">-->
+        <!--and o.price &lt;(select sum(m.price) from m_mate m where m.planToonId=o.id and m.type=1 and m.status=2)-->
+      <!--</if>-->
+      <!--<if test="status==2">-->
+        <!--and o.price &gt;=(select sum(m.price) from m_mate m where m.planToonId=o.id and m.type=1 and m.status=2)-->
+      <!--</if>-->
+    </if>
+    order by o.createDate desc
+  </select>
+  <select id="selectUserAllRobOrderToStatus" resultMap="BaseResultMap">
+    select * from m_rob_order r where 1=1
+    <if test="userId!=null">
+      and r.userId=#{userId,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+      and r.status=#{status,jdbcType=INTEGER}
+    </if>
+  </select>
+  <select id="selectUserRobOrderDateDesc" resultMap="BaseResultMap">
+  select * from m_rob_order where userId=#{userId,jdbcType=INTEGER} ORDER BY createDate DESC LIMIT 0,1
+  </select>
+</mapper>

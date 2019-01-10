@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.MFileErroMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.MFileErro">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="fileName" jdbcType="VARCHAR" property="filename" />
+    <result column="requestIp" jdbcType="VARCHAR" property="requestip" />
+    <result column="nowLoginId" jdbcType="INTEGER" property="nowloginid" />
+  </resultMap>
+</mapper>

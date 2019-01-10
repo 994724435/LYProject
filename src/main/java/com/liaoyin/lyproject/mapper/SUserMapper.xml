@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.SUserMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.SUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userAccount" jdbcType="VARCHAR" property="useraccount" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="twoPassword" jdbcType="VARCHAR" property="twopassword" />
+    <result column="userNickName" jdbcType="VARCHAR" property="usernickname" />
+    <result column="realName" jdbcType="VARCHAR" property="realName"/>
+    <result column="userHeadImg" jdbcType="VARCHAR" property="userheadimg" />
+    <result column="lastLoginTime" jdbcType="TIMESTAMP" property="lastlogintime" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="socket_uuid" jdbcType="VARCHAR" property="socketUuid" />
+    <result column="isDelete" jdbcType="INTEGER" property="isdelete" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="arrangement" jdbcType="INTEGER" property="arrangement" />
+    <result column="refereeId" jdbcType="INTEGER" property="refereeId" />
+    <result column="mold" jdbcType="INTEGER" property="mold"/>
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+  </resultMap>
+  <select id="selectUserPhone" resultMap="BaseResultMap">
+    select * from s_user where userAccount=#{phone,jdbcType=VARCHAR} and arrangement=0 and isDelete!=1
+  </select>
+  <select id="selectArrangementUser" resultMap="BaseResultMap">
+    select * from s_user where userAccount=#{phone,jdbcType=VARCHAR} and arrangement=0 and isDelete!=1
+  </select>
+  <select id="selectUserPhoneAll" resultMap="BaseResultMap">
+    select * from s_user where userAccount=#{phone,jdbcType=VARCHAR} and isDelete!=1
+  </select>
+  <select id="selectUserNickName" resultMap="BaseResultMap">
+    select * from s_user where userNickName=#{nickName,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUserInfoToken" resultMap="BaseResultMap">
+    select * from s_user where token=#{token,jdbcType=VARCHAR} and userAccount=#{phone,jdbcType=VARCHAR}
+  </select>
+  <select id="selectUserListMap" resultType="java.util.Map">
+    select s.id,s.useraccount,s.usernickname,s.userHeadImg,s.lastLoginTime,s.socket_uuid,s.isDelete,s.status,s.arrangement,
+    s.createDate,s.realName,s.mold
+    from s_user s where 1=1
+    <if test="key!=null">
+      and (s.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or s.usernickname like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+      or s.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="arrangement!=null">
+      and s.arrangement=#{arrangement,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+      <if test="status==5">
+        and s.id in (5,9,13,14)
+      </if>
+      <if test="status!=5">
+        and s.status=#{status,jdbcType=INTEGER}
+      </if>
+    </if>
+    <if test="refereeId!=null">
+      and s.refereeId=#{refereeId,jdbcType=INTEGER}
+    </if>
+    <if test="isDelete!=null">
+      and s.isDelete=#{isDelete,jdbcType=INTEGER}
+    </if>
+    order by s.createDate desc
+  </select>
+
+  <select id="selectUserListMapSystem" resultType="java.util.Map">
+    select s.id,s.useraccount,s.usernickname,s.userHeadImg,s.lastLoginTime,s.socket_uuid,s.isDelete,s.status,s.arrangement,
+    s.createDate,s.realName,s.mold
+    ,
+    (
+    (SELECT IFNULL(sum(c.price),0) from m_cashapply_order c where c.userId=s.id)-
+    (SELECT IFNULL(sum(m.price),0) from m_mate m where m.status=2 and m.cashapplyUserId=s.id)) as hl
+    from s_user s where 1=1
+    <if test="key!=null">
+      and (s.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or s.usernickname like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+      or s.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="arrangement!=null">
+      and s.arrangement=#{arrangement,jdbcType=INTEGER}
+    </if>
+    <if test="status!=null">
+      <if test="status==5">
+        and s.id in (5,9,13,14)
+      </if>
+      <if test="status!=5">
+        and s.status=#{status,jdbcType=INTEGER}
+      </if>
+    </if>
+    <if test="refereeId!=null">
+      and s.refereeId=#{refereeId,jdbcType=INTEGER}
+    </if>
+    <if test="isDelete!=null">
+      and s.isDelete=#{isDelete,jdbcType=INTEGER}
+    </if>
+    order by s.createDate desc
+  </select>
+
+  <select id="selectUserListMapAllPhone" resultType="java.util.Map">
+  select s.id,s.useraccount,s.usernickname,s.userHeadImg,s.lastLoginTime,s.socket_uuid,s.isDelete,s.status,s.arrangement,
+  s.createDate,s.realName,s.mold from s_user s where s.userAccount=#{key,jdbcType=VARCHAR} and s.isDelete!=1 and s.arrangement=0
+  </select>
+  <select id="selectUserListMapChildLst" resultType="java.util.Map">
+    select s.id,s.useraccount,s.usernickname,s.userHeadImg,s.lastLoginTime,s.socket_uuid,s.isDelete,s.status,s.arrangement,
+    s.createDate,s.realName,s.mold from s_user s where 1=1
+    <if test="key!=null">
+      and (s.userAccount like  CONCAT('%',#{key,jdbcType=VARCHAR},'%') or s.usernickname like  CONCAT('%',#{key,jdbcType=VARCHAR},'%')
+      or s.realName like  CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="status!=null">
+      <if test="status==5">
+        and s.id in (5,9,13,14)
+      </if>
+      <if test="status!=5">
+        and s.status=#{status,jdbcType=INTEGER}
+      </if>
+    </if>
+    <if test="childLstUserId!=null">
+      and s.id in (${childLstUserId})
+    </if>
+    <if test="isDelete!=null">
+      and s.isDelete=#{isDelete,jdbcType=INTEGER}
+    </if>
+    order by s.createDate desc
+  </select>
+  <select id="selectDistributeOrderUser"  resultType="java.util.Map">
+    select s.id,s.useraccount,s.usernickname,s.userHeadImg,s.lastLoginTime,s.socket_uuid,s.isDelete,s.status,s.arrangement,
+    s.createDate,s.realName,s.mold from s_user s where s.id=333 or s.id=14 or s.id=87 or s.id=1080
+  </select>
+  <select id="selectUserIdChildLst" resultType="String">
+    select getChildLst(#{userId,jdbcType=INTEGER})
+  </select>
+  <select id="userZr" resultType="java.util.Map">
+    select * from huzhu.huzhu_user
+  </select>
+  <select id="giftIntegralRecord" resultType="java.util.Map">
+    select * from huzhu.huzhu_jifenlist
+  </select>
+  <select id="giftCashapply" resultType="java.util.Map">
+    select * from huzhu.huzhu_tixian
+  </select>
+  <select id="giftRob" resultType="java.util.Map">
+    select * from huzhu_pai.huzhu_pai
+  </select>
+  <select id="giftPlatoonOrder" resultType="com.liaoyin.lyproject.entity.MCashapplyOrder">
+    select * from m_cashapply_order where createDate &gt;'2018-09-28 23:59:59' ORDER BY createDate DESC
+  </select>
+  <select id="clearAccount">
+--     UPDATE s_account set totalPrice=0,canPrice=0 where userId in (select DISTINCT(userId) from m_cashapply_order where createDate&lt;'2018-09-28 23:59:59')
+      UPDATE s_account set totalPrice=0,canPrice=0
+  </select>
+  <select id="selectAllMMate" resultType="com.liaoyin.lyproject.entity.MMate">
+--     select * from m_mate where createDate &gt;'2018-09-23 00:00:00' and createDate&lt;'2018-09-28 23:59:59' and proofFile is not null ORDER BY createDate DESC
+--
+    select * from m_mate m where m.createDate &gt; '2018-09-23 00:00:00'
+    and m.createDate &lt;'2018-09-28 23:59:59' and m.proofFile is not null and(select count(1) from m_cashapply_order c where m.planToonUserId=c.userId
+    and c.createDate &gt;'2018-09-23 00:00:00'
+    and c.createDate &lt;'2018-09-28 23:59:59')=0  ORDER BY m.createDate DESC
+</select>
+  <update id="updateNotPlanToonOrderTimeUser">
+    update s_user u set u.status=3 where u.id in (select p.userId from (select p.* from (select p.* from m_platoon_order p ORDER BY
+    p.createDate DESC) p GROUP BY p.userId ORDER BY p.createDate DESC) p
+    where DATE_ADD(p.createDate,INTERVAL (select d.realValue from s_dict d where d.code='DICT_NOTPLATOONT_TIME') HOUR)&lt;NOW())
+  </update>
+  <update id="updateNotPlanToonOrderTimeUserTwo">
+    update s_user u set u.status=3 where u.id in (select t.* from (SELECT u2.id FROM s_user u2
+    LEFT JOIN m_platoon_order p on u2.id=p.userId where p.id is null and u2.status=1) t)
+  </update>
+  <select id="giftCashapplyOrderOne" resultType="com.liaoyin.lyproject.entity.MCashapplyOrder">
+    select * from m_cashapply_order where userId=#{userId,jdbcType=INTEGER} ORDER BY createDate DESC limit 0,1
+  </select>
+  <select id="giftPlatoonOrderOne" resultType="java.util.Map">
+    select p.*,m.createDate as makePriceDate from m_platoon_order p LEFT JOIN m_mate m on p.id=m.planToonId  where
+     p.userId=#{userId,jdbcType=INTEGER} and m.proofFile is not null and m.type=0 ORDER BY m.makePriceDate DESC limit 0,1
+  </select>
+  <select id="robOrder" resultType="java.util.Map">
+    select p.*,m.createDate as makePriceDate from m_rob_order p LEFT JOIN m_mate m on p.id=m.planToonId  where
+     p.userId=#{userId,jdbcType=INTEGER} and m.proofFile is not null and m.type=1 ORDER BY m.makePriceDate DESC limit 0,1
+  </select>
+  <select id="selectAllsUserSA" resultMap="BaseResultMap">
+    select u.* from s_user u LEFT JOIN m_cashapply_order c on u.id=c.userId where c.id is null
+  </select>
+  <select id="robOrderOut" resultType="com.liaoyin.lyproject.entity.MRobOrder">
+    select * from m_rob_order where userId=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="platOrderOut" resultType="com.liaoyin.lyproject.entity.MPlatoonOrder">
+    select p.* from m_platoon_order p LEFT JOIN m_mate m on p.id=m.planToonId where userId=#{userId,jdbcType=INTEGER} and m.proofFile is not null
+  </select>
+  <select id="selectWithdrawing" resultType="java.util.Map">
+    select y.* from (
+    select kl.*,IFNULL(CHAR_LENGTH(kl.userIds),0) as v1,IFNULL(CHAR_LENGTH(kl.userIds_two),0) as v2 from (
+    select t.*,GROUP_CONCAT(t2.userId SEPARATOR ',') as userIds_two from (select z.*,GROUP_CONCAT(a.userId SEPARATOR ',') as userIds from (select
+    alipayAccount,count(alipayAccount) as c1,
+    wxpayAccount,count(wxpayAccount) as c2,
+    bankAccount,COUNT(bankAccount) as c3 from s_account  group by alipayAccount,wxpayAccount,bankAccount having (c1&gt;3) and (c2&gt;3) and (c3&gt;3) ) z
+    LEFT JOIN s_account a ON a.alipayAccount = z.alipayAccount and a.wxpayAccount=z.wxpayAccount and a.bankAccount=z.bankAccount
+    where !((z.alipayAccount is null or z.alipayAccount='') and (z.wxpayAccount is null or z.wxpayAccount='') and (z.bankAccount is null or z.bankAccount=''))
+    GROUP BY z.alipayAccount,z.wxpayAccount,z.bankAccount ) t
+    join   mysql.help_topic b on b.help_topic_id &lt; (length(t.userIds) - length(replace(t.userIds,',',''))+1) LEFT JOIN
+    (select v1.userId FROM (select t.* from(select * FROM m_cashapply_order c
+    ORDER BY c.createDate DESC) t GROUP BY t.userId DESC) v1
+    LEFT JOIN (select t.* from(select * FROM m_platoon_order p ORDER BY p.createDate DESC) t GROUP BY t.userId DESC) v2 on v1.userId=v2.userId
+    where v1.createDate &gt; v2.createDate) t2 on t2.userId  in (select substring_index(substring_index(t.userIds,',',b.help_topic_id+1),',',-1)) GROUP BY t.userIds
+    )kl
+    )y where (y.v2/y.v1)&gt;0.66
+  </select>
+  <select id="selectWithdrawingUser" resultType="java.util.Map">
+    select u.id,u.userAccount,u.realName,u.status,u.arrangement,
+    v1.createDate as cashapplyDate,v2.createDate as plantoonDate,0 as isDrawing,ifnull(a.status,0) as accountStatus from s_user u
+    left join (select t.* from(select * FROM m_cashapply_order c ORDER BY c.createDate DESC) t GROUP BY t.userId DESC) v1 on v1.userId=u.id
+    left join (select t.* from(select * FROM m_platoon_order p ORDER BY p.createDate DESC) t GROUP BY t.userId DESC) v2 on v2.userId=u.id
+    left join s_account a on u.id=a.userId
+    where u.id in (${userIds})
+    order by v1.createDate desc
+  </select>
+  <select id="selectRegisterWarning" resultType="java.util.Map">
+    select u.id,u.userAccount,u.realName,u.createDate,u.isDelete,u.status,(
+select count(1) from s_user ul where ul.createDate &gt; DATE_SUB(NOW(),INTERVAL
+(SELECT d.realValue from s_dict d where d.code='DICT_REGISTER_WARNING_TIME') HOUR) and ul.refereeId=u.id
+) as registerCount from s_user u
+where u.id in (select us.refereeId from (select u.refereeId,count(refereeId) as refereeCount from
+    (select uu.* from s_user uu where uu.createDate &gt; DATE_SUB(NOW(),INTERVAL
+(SELECT d.realValue from s_dict d where d.code='DICT_REGISTER_WARNING_TIME') HOUR))u group by u.refereeId having (refereeCount>
+(SELECT d.realValue from s_dict d where d.code='DICT_WARNING_NUM'))) us)
+  </select>
+  <select id="selectWarningUsers" resultType="java.util.Map">
+    select u.id,u.userAccount,u.realName,u.createDate,u.isDelete,u.status from
+    (select uu.* from s_user uu where uu.createDate &gt; DATE_SUB(NOW(),INTERVAL
+(SELECT d.realValue from s_dict d where d.code='DICT_REGISTER_WARNING_TIME') HOUR))u where u.refereeId=#{userId,jdbcType=INTEGER}
+  </select>
+  <select id="selectWarningUserIds" resultType="String">
+    select GROUP_CONCAT(us.userIds) from (select z.*,GROUP_CONCAT(a.userId SEPARATOR ',') as userIds from (select
+    alipayAccount,count(alipayAccount) as c1,
+    wxpayAccount,count(wxpayAccount) as c2,
+    bankAccount,COUNT(bankAccount) as c3 from s_account  group by alipayAccount,wxpayAccount,bankAccount having (c1>3) and (c2>3) and (c3>3) ) z
+    LEFT JOIN s_account a ON a.alipayAccount = z.alipayAccount and a.wxpayAccount=z.wxpayAccount and a.bankAccount=z.bankAccount
+    where !((z.alipayAccount is null or z.alipayAccount='') and (z.wxpayAccount is null or z.wxpayAccount='') and (z.bankAccount is null or z.bankAccount=''))
+    GROUP BY z.alipayAccount,z.wxpayAccount,z.bankAccount) us
+  </select>
+</mapper>

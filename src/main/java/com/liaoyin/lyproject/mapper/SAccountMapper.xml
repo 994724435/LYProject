@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.SAccountMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.SAccount">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="totalPrice" jdbcType="INTEGER" property="totalprice" />
+    <result column="canPrice" jdbcType="INTEGER" property="canprice" />
+    <result column="integral" jdbcType="INTEGER" property="integral" />
+    <result column="alipayAccount" jdbcType="VARCHAR" property="alipayaccount" />
+    <result column="wxpayAccount" jdbcType="VARCHAR" property="wxpayaccount" />
+    <result column="bankAccount" jdbcType="VARCHAR" property="bankaccount" />
+    <result column="bankName" jdbcType="VARCHAR" property="bankName"/>
+    <result column="userId" jdbcType="INTEGER" property="userid" />
+    <result column="refereeNum" jdbcType="INTEGER" property="refereeNum"/>
+    <result column="status" jdbcType="INTEGER" property="status"/>
+  </resultMap>
+  <select id="selectAccountUserId" resultMap="BaseResultMap">
+    select * from s_account where userId=#{userId,jdbcType=VARCHAR}
+  </select>
+  <select id="selectAccountForUpdate" resultMap="BaseResultMap">
+    select * from s_account where userId=#{userId,jdbcType=VARCHAR}
+  </select>
+  <update id="updateAccountIntgralToReduce">
+    update s_account a set a.integral = a.integral-#{intgral,jdbcType=INTEGER} where a.userId=#{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateAccountPriceToReduce">
+    update s_account a set a.totalPrice = a.totalPrice-#{price,jdbcType=INTEGER},a.canPrice = a.canPrice-#{price,jdbcType=INTEGER} where a.userId=#{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateAccountStatusToUserId">
+    update s_account set status=#{status,jdbcType=INTEGER} where userId=#{userId,jdbcType=INTEGER}
+  </update>
+  <update id="updateAccountStatusTo">
+    update s_account set status=#{status,jdbcType=INTEGER}
+  </update>
+  <update id="updateAccountStatusAndUserIds">
+    update s_account set status=#{status,jdbcType=INTEGER} where userId in (${userIds})
+  </update>
+</mapper>

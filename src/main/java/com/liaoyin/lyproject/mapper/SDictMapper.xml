@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.SDictMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.SDict">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="dictType" jdbcType="VARCHAR" property="dicttype" />
+    <result column="displayValue" jdbcType="VARCHAR" property="displayvalue" />
+    <result column="realValue" jdbcType="DOUBLE" property="realvalue" />
+    <result column="parentId" jdbcType="INTEGER" property="parentid" />
+  </resultMap>
+  <select id="selectDict" resultMap="BaseResultMap">
+    select * from s_dict where code=#{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectDictAll" resultMap="BaseResultMap">
+    select * from s_dict where code=#{code,jdbcType=VARCHAR}
+  </select>
+  <select id="selectDictDictionary" resultMap="BaseResultMap">
+    select * from s_dict order by id asc
+  </select>
+</mapper>

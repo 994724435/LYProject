@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="war" name="LyProject:war">
+    <output-path>$PROJECT_DIR$/target</output-path>
+    <root id="archive" name="LyProject-0.0.1-SNAPSHOT.war">
+      <element id="artifact" artifact-name="LyProject:war exploded" />
+    </root>
+  </artifact>
+</component>

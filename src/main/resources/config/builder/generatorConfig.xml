@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+
+<generatorConfiguration>
+    <properties resource="config/config.properties"/>
+    <context id="Mysql" targetRuntime="MyBatis3Simple" defaultModelType="flat">
+        <!--<commentGenerator>-->
+            <!--<property name="suppressDate" value="false"/>-->
+            <!--<property name="suppressAllComments" value="true"/>-->
+        <!--</commentGenerator>-->
+        <property name="beginningDelimiter" value="`"/>
+        <property name="endingDelimiter" value="`"/>
+        <property name="mergeable" value="false"></property>
+        <property name="javaFileEncoding" value="UTF-8"/>
+        <!---->
+        <plugin type="${mapper.plugin}">
+            <property name="mappers" value="${mapper.Mapper}"/>
+        </plugin>
+
+        <jdbcConnection driverClass="${jdbc.driverClass}"
+                        connectionURL="${jdbc.url}"
+                        userId="${jdbc.user}"
+                        password="${jdbc.password}">
+<!-- 			<property name="useInformationSchema" value="true"></property>                       -->
+        </jdbcConnection>
+
+        <!-- 默认false，把JDBC DECIMAL 和 NUMERIC 类型解析为 Integer，为 true时把JDBC DECIMAL和 NUMERIC 类型解析为java.math.BigDecimal -->
+		<javaTypeResolver>
+			<property name="forceBigDecimals" value="false" />
+		</javaTypeResolver>
+
+        <javaModelGenerator targetPackage="com.liaoyin.lyproject.entity" targetProject="src/main/java"/>
+        <sqlMapGenerator targetPackage="com.liaoyin.lyproject.mapper" targetProject="src/main/java"/>
+        <javaClientGenerator targetPackage="com.liaoyin.lyproject.dao" targetProject="src/main/java" type="XMLMAPPER"/>
+        <table tableName="m_file_erro" domainObjectName="MFileErro" mapperName="MFileErroMapper"></table>
+        <!--<table tableName="m_rob_order" domainObjectName="MRobOrder" mapperName="MRobOrderMapper"></table>-->
+    <!--<table tableName="m_mate" domainObjectName="MMate" mapperName="MMateMapper"></table>-->
+    <!--<table tableName="m_platoon_order" domainObjectName="MPlatoonOrder" mapperName="MPlatoonOrderMapper"></table>-->
+    <!--<table tableName="m_smscode" domainObjectName="MSmsCode" mapperName="MSmsCodeMapper"></table>-->
+    <!--<table tableName="s_account_record" domainObjectName="SAccountRecord" mapperName="SAccountRecordMapper"></table>-->
+    <!--<table tableName="s_dict" domainObjectName="SDict" mapperName="SDictMapper"></table>-->
+    <!--<table tableName="s_user" domainObjectName="SUser" mapperName="SUserMapper"></table>-->
+    <!--<table tableName="s_user_login_log" domainObjectName="SUserLoginLog" mapperName="SUserLoginLogMapper"></table>-->
+
+    </context>
+</generatorConfiguration>

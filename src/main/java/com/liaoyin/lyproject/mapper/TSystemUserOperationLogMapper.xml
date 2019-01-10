@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.liaoyin.lyproject.dao.TSystemUserOperationLogMapper">
+  <resultMap id="BaseResultMap" type="com.liaoyin.lyproject.entity.TSystemUserOperationLog">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userAccount" jdbcType="VARCHAR" property="useraccount" />
+    <result column="userPassword" jdbcType="VARCHAR" property="userpassword" />
+    <result column="realName" jdbcType="VARCHAR" property="realname" />
+    <result column="status" jdbcType="INTEGER" property="status" />
+    <result column="requestIp" jdbcType="VARCHAR" property="requestip" />
+    <result column="requestThread" jdbcType="VARCHAR" property="requestthread" />
+    <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
+    <result column="message" jdbcType="LONGVARCHAR" property="message" />
+  </resultMap>
+  <select id="selectSystemUserLoginLog" resultMap="BaseResultMap">
+    select * from  t_systemuser_operation_log o where 1=1
+    <if test="key!=null">
+      and (o.userAccount like CONCAT('%',#{key,jdbcType=VARCHAR},'%') or o.realName like
+      CONCAT('%',#{key,jdbcType=VARCHAR},'%'))
+    </if>
+    <if test="startDate!=null">
+      and o.createDate &gt;= #{startDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="endDate!=null">
+      and o.createDate &lt;= #{endDate,jdbcType=TIMESTAMP}
+    </if>
+    <if test="status!=null">
+      and o.status=#{status,jdbcType=INTEGER}
+    </if>
+    order by o.createDate desc
+  </select>
+</mapper>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SSSH>
+	<DeviceCmdListener>
+		<Class name="com.liaoyin.lyproject.communication.service.DeviceLoginController" init="getInstance"></Class>
+	</DeviceCmdListener>
+	<PhoneCmdListener>
+	</PhoneCmdListener>
+	<BuildLightCmdListener>
+	</BuildLightCmdListener>
+</SSSH>

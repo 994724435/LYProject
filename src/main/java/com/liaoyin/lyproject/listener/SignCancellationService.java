@@ -39,8 +39,8 @@ public class SignCancellationService {
     public void notPlanToonOrderTime(){
 //        log.info("---------------------定时任务开始执行，当前时间："+CommonDate.dateToString(new Date())+"---------------------");
 //        //直接更新
-        userMapper.updateNotPlanToonOrderTimeUser();
-        userMapper.updateNotPlanToonOrderTimeUserTwo();
+//        userMapper.updateNotPlanToonOrderTimeUser();
+//        userMapper.updateNotPlanToonOrderTimeUserTwo();
 //        log.info("---------------------定时任务结束执行，当前时间："+CommonDate.dateToString(new Date())+"---------------------");
         //将错误数据删除
         List<Map<String,Object>> datas = jobMapper.selectErroData();

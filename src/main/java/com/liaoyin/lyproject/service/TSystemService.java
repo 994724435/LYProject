@@ -106,7 +106,11 @@ public class TSystemService {
             throw new BusinessException("common.sendCode.Code.Erro");
         }
 
-        if (!Config.loginIpIsTrue(ip)) {
+//        if (!Config.loginIpIsTrue(ip)) {
+//            throw new BusinessException("common.systemlogin.ip.erro");
+//        }
+        SDict dict = dictMapper.selectDict("DICT_IP");
+        if (!ip.equals(dict.getDisplayvalue().toString())){
             throw new BusinessException("common.systemlogin.ip.erro");
         }
         TSystemUser tu = systemUserMapper.selectSystemUserPhone(phone);

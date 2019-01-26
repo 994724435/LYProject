@@ -24,6 +24,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -86,6 +87,22 @@ public class SUserService extends BaseService<SUserMapper, SUser> {
         if (!Common.isNull(dataUser)) {
             throw new BusinessException("common.userPhone");
         }
+
+        int wxAccountnum =this.mapper.selectUserwxAccount(account.getWxpayaccount());
+        if (wxAccountnum > 1){
+            throw new BusinessException("common.weixin.repate");
+        }
+
+        int alipay =this.mapper.selectUserAlipay(account.getAlipayaccount());
+        if (alipay > 1){
+            throw new BusinessException("common.alipay.repate");
+        }
+
+        int bank =this.mapper.selectUserbankAccount(account.getBankaccount());
+        if (bank > 1){
+            throw new BusinessException("common.bank.repate");
+        }
+
         if (!duplicationOfData(account)){
             throw new BusinessException("common.duplication.account");
         }

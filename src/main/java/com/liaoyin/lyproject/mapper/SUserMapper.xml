@@ -22,6 +22,19 @@
     <result column="mold" jdbcType="INTEGER" property="mold"/>
     <result column="createDate" jdbcType="TIMESTAMP" property="createdate" />
   </resultMap>
+
+  <select id="selectUserAlipay" resultType="int">
+    SELECT count(*)  from s_user a,s_account b where a.id=b.userId and a.arrangement =0 and b.alipayAccount =#{alipay,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectUserbankAccount" resultType="int">
+    SELECT count(*)  from s_user a,s_account b where a.id=b.userId and a.arrangement =0 and b.bankAccount =#{bankAccount,jdbcType=VARCHAR}
+  </select>
+
+  <select id="selectUserwxAccount" resultType="int">
+    SELECT count(*)  from s_user a,s_account b where a.id=b.userId and a.arrangement =0 and b.alipayAccount =#{wxAccount,jdbcType=VARCHAR}
+  </select>
+
   <select id="selectUserPhone" resultMap="BaseResultMap">
     select * from s_user where userAccount=#{phone,jdbcType=VARCHAR} and arrangement=0 and isDelete!=1
   </select>

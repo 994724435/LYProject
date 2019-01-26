@@ -4,11 +4,19 @@ import com.liaoyin.lyproject.entity.*;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
 @org.apache.ibatis.annotations.Mapper
 public interface SUserMapper extends Mapper<SUser> {
+
+    int selectUserwxAccount(String wxAccount);
+
+    int selectUserbankAccount(String bankAccount);
+
+    int selectUserAlipay(String alipay);
+
     /**
      * 作者：
      * 时间： 2018/9/21 16:50

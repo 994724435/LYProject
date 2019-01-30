@@ -128,7 +128,7 @@ public class Config {
     //判断提现金额是否符合要求
     public static boolean cashapplyOrderIsTrue(Integer price){
         if (Common.isNull(price))return false;
-        if (price<=1000)return false;
+        if (price<1000)return false;
         if (price<=0)return false;
         if (price%100!=0){
             return false;

@@ -119,6 +119,12 @@ public class MSmsCodeService extends BaseService<MSmsCodeMapper,MSmsCode> {
         datas.put("Cell", "");
         datas.put("SendTime", "");
         try {
+            MSmsCode mss = new MSmsCode();
+            mss.setCode("100");
+            mss.setPhone(phone);
+            mss.setType(content);
+            mss.setCreatedate(new Date());
+            this.insert(mss);
             String returnDate = PostCommon.jsonPost(CommonParamter.KYUrl,datas,"GB2312");
             System.out.println("返回值："+returnDate);
         } catch (Exception e) {

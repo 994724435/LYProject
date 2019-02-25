@@ -109,7 +109,7 @@ public class WebConfigurer extends WebMvcConfigurerAdapter {
                     String code = "common.tokenInvalid";//错误码,默认为token失效
                     String clientIdentity = request.getHeader("ClientIdentity_MT");//客户端标识，值为：_PC、_PCSYSTEM、_Android、_IOS
                     String token = request.getHeader("FilterToken_MT");//令牌
-                    if (!Common.isEqual(clientIdentity, Config._Android) && !Common.isEqual(clientIdentity, Config._IOS)
+                    if (!Common.isEqual(clientIdentity, Config._IOS)
                             && !Common.isEqual(clientIdentity, Config._PC) && !Common.isEqual(clientIdentity, Config._PCSYSTEM)) {
                         code = "common.clientIdentityIsErro";
                         boo = false;

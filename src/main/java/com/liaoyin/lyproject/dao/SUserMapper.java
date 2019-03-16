@@ -11,6 +11,8 @@ import java.util.Map;
 @org.apache.ibatis.annotations.Mapper
 public interface SUserMapper extends Mapper<SUser> {
 
+    int selectUserName(String name);
+
     int selectUserwxAccount(String wxAccount);
 
     int selectUserbankAccount(String bankAccount);

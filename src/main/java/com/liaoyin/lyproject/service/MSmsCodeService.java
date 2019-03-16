@@ -105,10 +105,12 @@ public class MSmsCodeService extends BaseService<MSmsCodeMapper,MSmsCode> {
         String content = "";
         switch (status){
             case 0://发货通知
-                content = "亲爱的会员，您帐号"+phone+"申请的订单已经成功签单，请您登陆后台操作，及时发货。一切以后台信息为准！-"+CommonDate.dateToString(new Date());
+//                content = "亲爱的会员，您帐号"+phone+"申请的订单已经成功签单，请您登陆后台操作，及时发货。一切以后台信息为准！-"+CommonDate.dateToString(new Date());
+                content = "亲爱的会员，您帐号"+phone+"订单已签单，请登陆后台发货。一切以后台信息为准！"+CommonDate.dateToString(new Date());
                 break;
             case 1://收货
-                content = "亲爱的会员，您帐号"+phone+"申请的订单已经成功签单，请您登陆后台操作，收货后请及时确认。一切以后台信息为准！-"+CommonDate.dateToString(new Date());
+//                content = "亲爱的会员，您帐号"+phone+"申请的订单已经成功签单，请您登陆后台操作，收货后请及时确认。一切以后台信息为准！-"+CommonDate.dateToString(new Date());
+                content = "亲爱的会员，您帐号"+phone+"订单单已签单，请收货后确认,一切以后台信息为准！-"+CommonDate.dateToString(new Date());
                 break;
         }
         Map<String, Object> datas = new LinkedHashMap<>();
@@ -119,12 +121,12 @@ public class MSmsCodeService extends BaseService<MSmsCodeMapper,MSmsCode> {
         datas.put("Cell", "");
         datas.put("SendTime", "");
         try {
-            MSmsCode mss = new MSmsCode();
-            mss.setCode("100");
-            mss.setPhone(phone);
-            mss.setType(content);
-            mss.setCreatedate(new Date());
-            this.insert(mss);
+//            MSmsCode mss = new MSmsCode();
+//            mss.setCode("100");
+//            mss.setPhone(phone);
+//            mss.setType(content);
+//            mss.setCreatedate(new Date());
+//            this.insert(mss);
             String returnDate = PostCommon.jsonPost(CommonParamter.KYUrl,datas,"GB2312");
             System.out.println("返回值："+returnDate);
         } catch (Exception e) {

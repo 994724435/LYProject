@@ -89,18 +89,23 @@ public class SUserService extends BaseService<SUserMapper, SUser> {
         }
 
         int wxAccountnum =this.mapper.selectUserwxAccount(account.getWxpayaccount());
-        if (wxAccountnum > 1){
+        if (wxAccountnum > 0){
             throw new BusinessException("common.weixin.repate");
         }
 
         int alipay =this.mapper.selectUserAlipay(account.getAlipayaccount());
-        if (alipay > 1){
+        if (alipay > 0){
             throw new BusinessException("common.alipay.repate");
         }
 
         int bank =this.mapper.selectUserbankAccount(account.getBankaccount());
-        if (bank > 1){
+        if (bank > 0){
             throw new BusinessException("common.bank.repate");
+        }
+
+        int username = this.mapper.selectUserName(user.getRealName());
+        if (username > 0){
+            throw new BusinessException("common.username.repate");
         }
 
         if (!duplicationOfData(account)){
@@ -141,8 +146,8 @@ public class SUserService extends BaseService<SUserMapper, SUser> {
         //推荐人操作
         SAccount refereeAccount = accountMapper.selectAccountUserId(refereeId);
         if (!Common.isNull(refereeAccount)){
-            refereeAccount.setRefereeNum(refereeAccount.getRefereeNum()+1);
-            accountMapper.updateByPrimaryKeySelective(refereeAccount);
+//            refereeAccount.setRefereeNum(refereeAccount.getRefereeNum()+1);
+//            accountMapper.updateByPrimaryKeySelective(refereeAccount);
         }
         return RestUtil.createResponse(su);
     }

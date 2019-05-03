@@ -56,6 +56,24 @@ public class MCashapplyOrderService extends BaseService<MCashapplyOrderMapper,MC
         if (!Config.cashapplyOrderIsTrue(price)){
             throw new BusinessException("common_cashapply_price_erro");
         }
+
+        System.out.println("提现用户数据："+bean.getUserAccount() + bean.getUid().toString());
+
+        //是否注册半年
+//        int userid = accountMapper.getHalfYearUid(bean.getUserAccount());
+//        System.out.println("注册半年的用户ID："+ userid);
+//        if(userid == 0 ){
+//           int refreenum = accountMapper.refereeNum(bean.getUserAccount());
+//           int childAccountNum =accountMapper.childAccountNum(bean.getUserAccount());
+//
+//            System.out.println("用户推荐有效个数："+ refreenum);
+//           if(refreenum >= childAccountNum && refreenum > 0 ){
+//
+//           }else {
+//               throw new BusinessException("有效推荐人数至少"+ childAccountNum +"个");
+//           }
+//        }
+
         SAccount account = accountMapper.selectAccountUserId(bean.getUid());
         if (account.getCanprice()<price){
             throw new BusinessException("common_cashapply_price_not");

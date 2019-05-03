@@ -10,6 +10,8 @@ import java.util.Map;
 
 @org.apache.ibatis.annotations.Mapper
 public interface SAccountMapper extends Mapper<SAccount> {
+
+
     /**
      * 作者：
      * 时间： 2018/9/25 14:22
@@ -58,4 +60,19 @@ public interface SAccountMapper extends Mapper<SAccount> {
      * 描述： 账户状态操作
      **/
     void updateAccountStatusAndUserIds(@Param("status") Integer status,@Param("userIds")String userIds);
+
+    /*
+     * 查询当前用户是否半年前注册的 @Param("useraccount") String useraccount
+     */
+    int getHalfYearUid( String useraccount);
+
+    /*
+    * 查询当前用户推荐的个数  int selectUserName(String name);
+    */
+    int refereeNum(String useraccount);
+
+    /**
+     * 查询账号个数
+     */
+    int childAccountNum(String useraccount);
 }

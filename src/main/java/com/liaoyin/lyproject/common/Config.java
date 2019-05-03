@@ -36,7 +36,7 @@ public class Config {
     public static final String _receivablesTime = "_receivablesTime";
     public static final String _mateTime = "_mateTime";
     //后台管理用户电话
-    public static final String[] ps = {"18119323313","18338222207","13479379401","18076196667"};
+    public static final String[] ps = {"18119323313","18338222207","13479379401","18076196667","15393216067","18883287644","17392100391","18037355552"};
 
     //Redis获取SessionBean
     public static SessionBean getSessionBean(String key) {

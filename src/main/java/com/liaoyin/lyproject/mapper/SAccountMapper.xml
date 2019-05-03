@@ -38,4 +38,17 @@
   <update id="updateAccountStatusAndUserIds">
     update s_account set status=#{status,jdbcType=INTEGER} where userId in (${userIds})
   </update>
+
+  <select id="getHalfYearUid" resultType="int">
+    SELECT case when createDate &lt;  date_add(curdate(),interval -6 month) THEN 0 ELSE id end FROM s_user  WHERE userAccount =#{useraccount,jdbcType=VARCHAR} and arrangement = 0 and  isDelete =0
+  </select>
+
+  <select id="refereeNum" resultType="int">
+    SELECT refereeNum from s_account where userId = ( SELECT id FROM s_user WHERE userAccount =  #{useraccount,jdbcType=VARCHAR}   and arrangement = 0 )
+  </select>
+
+  <select id="childAccountNum" resultType="int">
+    SELECT count(1) FROM s_user  where  userAccount = #{useraccount,jdbcType=VARCHAR} and isDelete = 0
+  </select>
+
 </mapper>
